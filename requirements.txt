@@ -1,0 +1,11 @@
+# Data processing
+pandas
+numpy
+
+# Backend
+fastapi
+uvicorn
+
+# Visualization and UI
+streamlit
+plotly

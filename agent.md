@@ -1,0 +1,4 @@
+- **Project:** NASA Meteorite Landings Visualization
+- **Tech Stack:** FastAPI (Backend), Pandas (Data Processing), Vanilla JS & HTML/CSS (Frontend), Plotly.js (Visualization via CDN).
+- **Design System:** "Deep Space" Dark Mode. Background: `#0F0F14`, Panels: `#16161F`, Borders: `#2A2A3A`, Text: `#94A3B8`. Accent colors: Neon Orange (`#FF6E00`) for "Fell" status, Bright Cyan (`#00E5FF`) for "Found" status.
+- **Rule:** Always keep data logic on the server-side (FastAPI). The frontend must use `fetch()` to call the API and only handle rendering.

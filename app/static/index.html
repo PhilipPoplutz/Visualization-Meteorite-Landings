@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meteorite Explorer Dashboard</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-bar">
+        <nav class="nav-tabs" aria-label="Dashboard sections">
+          <button class="nav-button active" type="button">Map</button>
+          <button class="nav-button" type="button">Data Explorer</button>
+        </nav>
+
+        <div class="data-counter" aria-live="polite">
+          Total Data Points:
+          <strong id="data-count">0</strong>
+        </div>
+      </header>
+
+      <div class="dashboard">
+        <aside class="sidebar" aria-label="Map filters">
+          <h1>Filter Map By</h1>
+
+          <section class="filter-group">
+            <h2>Fall Status</h2>
+            <label class="check-row fell">
+              <input id="show-fell" type="checkbox" checked />
+              <span class="custom-check"></span>
+              <span>Fell</span>
+            </label>
+            <label class="check-row found">
+              <input id="show-found" type="checkbox" checked />
+              <span class="custom-check"></span>
+              <span>Found</span>
+            </label>
+          </section>
+
+          <section class="filter-group">
+            <div class="filter-heading">
+              <h2>Timeline</h2>
+              <span><output id="year-min-value">860</output> - <output id="year-max-value">2013</output></span>
+            </div>
+            <div class="dual-range" data-range="year">
+              <input id="min-year" type="range" min="860" max="2013" value="860" step="1" aria-label="Minimum year" />
+              <input id="max-year" type="range" min="860" max="2013" value="2013" step="1" aria-label="Maximum year" />
+            </div>
+            <div class="range-labels">
+              <span>860</span>
+              <span>2013</span>
+            </div>
+          </section>
+
+          <section class="filter-group">
+            <div class="filter-heading">
+              <h2>Mass Range</h2>
+              <span><output id="mass-min-value">0 g</output> - <output id="mass-max-value">60,000,000 g</output></span>
+            </div>
+            <div class="dual-range" data-range="mass">
+              <input id="min-mass" type="range" min="0" max="60000000" value="0" step="1000" aria-label="Minimum mass" />
+              <input id="max-mass" type="range" min="0" max="60000000" value="60000000" step="1000" aria-label="Maximum mass" />
+            </div>
+            <div class="range-labels">
+              <span>0 g</span>
+              <span>60,000,000 g</span>
+            </div>
+          </section>
+        </aside>
+
+        <main class="map-panel" aria-label="Meteorite landing map">
+          <div id="map"></div>
+        </main>
+      </div>
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
