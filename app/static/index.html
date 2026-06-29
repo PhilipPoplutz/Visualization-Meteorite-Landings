@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meteorite Explorer Dashboard</title>
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/style.css?v=density-violin" />
   </head>
   <body>
     <div class="app-shell">
       <header class="top-bar">
         <nav class="nav-tabs" aria-label="Dashboard sections">
-          <button class="nav-button active" type="button">Map</button>
-          <button class="nav-button" type="button">Data Explorer</button>
+          <button id="tab-map" class="nav-button active" type="button" aria-controls="view-map">Map</button>
+          <button id="tab-explorer" class="nav-button" type="button" aria-controls="view-explorer">Data Explorer</button>
         </nav>
 
         <div class="data-counter" aria-live="polite">
@@ -69,13 +69,26 @@
           </section>
         </aside>
 
-        <main class="map-panel" aria-label="Meteorite landing map">
-          <div id="map"></div>
+        <main class="content-panel">
+          <section id="view-map" class="view map-view active" aria-label="Meteorite landing map">
+            <div id="map"></div>
+          </section>
+
+          <section id="view-explorer" class="view explorer-view" aria-label="Meteorite data explorer" hidden>
+            <div class="explorer-grid">
+              <div class="chart-panel">
+                <div id="chart-density"></div>
+              </div>
+              <div class="chart-panel">
+                <div id="chart-violin"></div>
+              </div>
+            </div>
+          </section>
         </main>
       </div>
     </div>
 
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <script src="/app.js"></script>
+    <script src="/app.js?v=density-violin"></script>
   </body>
 </html>

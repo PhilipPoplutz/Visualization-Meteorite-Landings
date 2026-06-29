@@ -281,7 +281,7 @@ input {
   font-size: 0.8rem;
 }
 
-.map-panel {
+.content-panel {
   position: relative;
   flex: 1;
   min-width: 0;
@@ -289,18 +289,67 @@ input {
   background: radial-gradient(circle at center, rgba(42, 42, 58, 0.3), transparent 52%);
 }
 
+.view {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+.view[hidden] {
+  display: none;
+}
+
+.map-view,
 #map {
   width: 100%;
   height: 100%;
 }
 
-.map-panel::after {
+.content-panel::after {
   position: absolute;
   inset: 18px;
   border: 1px solid rgba(42, 42, 58, 0.88);
   border-radius: 8px;
   pointer-events: none;
   content: "";
+}
+
+.explorer-view {
+  padding: 18px;
+}
+
+.explorer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+#chart-density,
+#chart-violin {
+  width: 100%;
+  height: 100%;
+}
+
+#chart-density.js-plotly-plot,
+#chart-violin.js-plotly-plot,
+#chart-density .plot-container,
+#chart-violin .plot-container,
+#chart-density .svg-container,
+#chart-violin .svg-container {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 @media (max-width: 860px) {
@@ -329,6 +378,12 @@ input {
     overflow: auto;
     border-right: 0;
     border-bottom: 1px solid var(--border);
+  }
+
+  .explorer-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(360px, 1fr) minmax(360px, 1fr);
+    overflow: auto;
   }
 }
 
