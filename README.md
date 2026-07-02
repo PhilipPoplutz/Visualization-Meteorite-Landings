@@ -1,116 +1,212 @@
 # NASA Meteorite Landings Visualization
 
-Interactive Information Visualization prototype for exploring the NASA Meteorite Landings dataset. The app combines a desktop-first world map with a Data Explorer for mass, time, fall-status, and class analysis.
+Interactive Information Visualization prototype for exploring NASA meteorite landing records. The app combines a FastAPI backend with a vanilla HTML/CSS/JavaScript frontend and Plotly visualizations.
 
-## Main Features
+The prototype has two main views:
 
-- Shared left sidebar with Year Range and Mass Range filters for both Map and Data Explorer.
-- Apply-only workflow: sliders, presets, and numeric inputs update pending values first; API requests and Plotly redraws happen only after **Apply filters**.
-- Log-transformed mass slider for the strongly skewed mass distribution, while numeric mass inputs still use exact gram values.
-- Year and mass presets for common analysis ranges.
-- Map-only Fall Status control for Fell and Found records; toggles update the map immediately without Apply.
-- Cluster colors follow Fall Status composition: Fell-only clusters are orange, Found-only clusters are cyan, and both-active clusters use the dominant fall status while preserving stable Plotly label positioning during zoom and pan.
-- Data Explorer with KPI cards, mass histogram, temporal development by decade, top classes, approximate focus regions, mass-time-frequency bubble chart, and Fell vs. Found mass comparison.
-- Approximate focus-region analysis for Antarctica and selected desert-related coordinate boxes inside the Data Explorer.
-- Multidimensional bubble chart combining decade, median mass, fall status, and record count.
-- Accessible meteorite class glossary for common class codes such as L6 and H5.
-- Fell vs. Found comparison uses a violin plot with embedded box summaries.
-- Plotly resize handling after tab switches to keep the map and charts correctly sized.
-- Empty chart states for filters that return no records.
+- **Map**: spatial exploration of meteorite records with clustered markers, mass-based marker size, and map-only Fell/Found toggles.
+- **Data Explorer**: analytical charts for mass distribution, temporal development, meteorite classes, approximate focus regions, mass-time-frequency patterns, and Fell vs. Found comparison.
 
-## Install Dependencies
+## Quick Start
 
-Create and activate a virtual environment if needed, then install the Python dependencies:
+### 1. Clone the repository
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/PhilipPoplutz/Visualization-Meteorite-Landings.git
+cd Visualization-Meteorite-Landings
 ```
 
-## Run the Backend
+### 2. Create a virtual environment
 
-Start the FastAPI server from the repository root:
+Windows PowerShell:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+macOS/Linux:
 
 ```bash
-uvicorn app.main:app --reload
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-If you use the existing project virtual environment on Windows:
+### 3. Install dependencies
 
 ```bash
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-## Open the Prototype
+### 4. Start the app
 
-Open the local app in a browser:
+```bash
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+### 5. Open the prototype
+
+Open this URL in a browser:
 
 ```text
-http://127.0.0.1:8000
+http://127.0.0.1:8000/
 ```
 
-The frontend is served by FastAPI from `app/static/`.
+To verify that the backend loaded the data, open:
 
-## Filter Workflow
+```text
+http://127.0.0.1:8000/api/health
+```
 
-1. Use the shared left sidebar to adjust Year Range and Mass Range.
-2. Use numeric inputs for exact values, or presets for common year/mass ranges.
-3. Click **Apply filters** to request filtered year/mass records from the FastAPI backend.
-4. Shared Year and Mass filters update both the Map and the Data Explorer.
-5. The Map tab also has a Fall Status control inside the map. Fell/Found toggles affect only the map and update immediately without Apply.
-6. The Data Explorer always keeps both Fell and Found records for comparison unless the shared year/mass filters naturally remove records.
-7. Click **Reset filters** to restore the full cleaned dataset range, then click **Apply filters** again.
+Expected response:
+
+```json
+{"status":"ok","records_loaded":32037}
+```
+
+## Requirements
+
+- Python 3.10 or newer recommended.
+- Internet access is recommended because Plotly is loaded in the browser from a CDN.
+- No Node.js build step is required.
+
+Python dependencies are listed in `requirements.txt`:
+
+- `fastapi`
+- `uvicorn`
+- `pandas`
+- `numpy`
 
 ## Project Structure
 
 ```text
 app/main.py                              FastAPI app and filtering API
-app/static/index.html                    Dashboard structure
-app/static/style.css                     Desktop layout and visual styling
+app/static/index.html                    Frontend HTML
+app/static/style.css                     Layout and visual styling
 app/static/app.js                        Filter state, API calls, Plotly rendering
 scripts/01_data_cleaning.py              Raw-to-cleaned data preparation
 data/raw/Meteorite_Landings.csv          Original NASA dataset
 data/processed/meteorites_cleaned.json   Cleaned dataset used by the app
+requirements.txt                         Python dependencies
+README.md                                Setup and usage guide
 ```
+
+## How to Use the Prototype
+
+1. Start the server and open `http://127.0.0.1:8000/`.
+2. The **Map** tab opens first and shows meteorite records on a dark world map.
+3. Use **Year Range** and **Mass Range** in the left sidebar to prepare shared filters.
+4. Click **Apply filters** to update both the Map and the Data Explorer.
+5. Use **Reset filters** to restore the full cleaned dataset range.
+6. Use **Fall Status** inside the Map view to toggle Fell and Found records immediately.
+7. Switch to **Data Explorer** to inspect KPI cards and charts.
+
+The shared Year and Mass filters use an Apply workflow so that the charts do not redraw while sliders are still being changed. Fall Status is map-specific and updates immediately because it only changes the map layer.
+
+## Main Features
+
+- Shared Year Range and Mass Range filters for Map and Data Explorer.
+- Map-only Fall Status toggles for Fell and Found records.
+- Clustered map markers for readability.
+- Marker color distinguishes Fell and Found records.
+- Marker size represents mass.
+- KPI cards for total records, Fell records, Found records, median mass, maximum mass, and year range.
+- Mass distribution histogram with logarithmic mass scale.
+- Temporal development chart aggregated by decade.
+- Top meteorite classes chart with a short class glossary.
+- Approximate focus regions by fall status.
+- Mass, time and frequency bubble chart.
+- Fell vs. Found mass comparison.
+- Empty states for filter combinations with no matching records.
 
 ## Regenerate the Cleaned Dataset
 
-If `data/raw/Meteorite_Landings.csv` is updated or replaced, regenerate the cleaned JSON:
-
-```bash
-python scripts/01_data_cleaning.py
-```
-
-The script writes:
+The app reads:
 
 ```text
 data/processed/meteorites_cleaned.json
 ```
 
+If the raw CSV is replaced or updated, regenerate the cleaned JSON from the repository root:
+
+```bash
+python scripts/01_data_cleaning.py
+```
+
+The cleaning script reads:
+
+```text
+data/raw/Meteorite_Landings.csv
+```
+
+and writes:
+
+```text
+data/processed/meteorites_cleaned.json
+```
+
+## Troubleshooting
+
+### Port 8000 is already in use
+
+Start the server on another port:
+
+```bash
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8001
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8001/
+```
+
+### PowerShell blocks virtual environment activation
+
+For the current PowerShell session, run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+### The map or charts do not appear
+
+- Check that the server is running without errors.
+- Open `http://127.0.0.1:8000/api/health` and confirm that records are loaded.
+- Check the browser console for JavaScript errors.
+- Make sure the browser can load Plotly from the CDN.
+
+### The app opens but shows no records
+
+Confirm that this file exists:
+
+```text
+data/processed/meteorites_cleaned.json
+```
+
+If it is missing, regenerate it:
+
+```bash
+python scripts/01_data_cleaning.py
+```
+
+## Quick Manual Check
+
+After setup, a reviewer can quickly verify the prototype with this flow:
+
+1. Open the Map tab and confirm markers or clusters are visible.
+2. Toggle Fell and Found in the Map view and confirm the map updates immediately.
+3. Change Year Range or Mass Range, then click **Apply filters**.
+4. Switch to Data Explorer and confirm KPI cards and charts are visible.
+5. Switch back to Map and confirm the map still fills the available space.
+6. Click **Reset filters**, then **Apply filters**, and confirm the full dataset returns.
+
 ## Known Limitations
 
-- No population-density overlay is included yet.
-- No exact country, biome, desert, or Antarctica/ice-region dataset is included.
-- Data Explorer focus regions are approximate latitude/longitude boxes for exploration only.
-- The cleaned NASA dataset snapshot ends in 2013.
+- The prototype uses the cleaned NASA dataset snapshot included in this repository.
+- The dataset ends in 2013.
+- Focus regions are approximate coordinate-based regions, not exact biome, country, desert, or ice-region classifications.
+- No population-density overlay is included.
 - The prototype supports visual exploration; it does not prove statistical correlations.
-
-## Manual Test Steps
-
-1. Start the app with `uvicorn app.main:app --reload`.
-2. Open `http://127.0.0.1:8000`.
-3. Confirm the Map tab loads with markers/clusters.
-4. Switch Map -> Data Explorer -> Map several times; the map must not become cropped or stuck in the top-left.
-5. Move sliders, type numeric values, and click presets; confirm no API update happens until **Apply filters** is clicked.
-6. Confirm numeric year/mass values and sliders stay synchronized.
-7. Click **Apply filters** and confirm map, record count, KPI cards, and charts update.
-8. Toggle Fell/Found in the Map tab and confirm only the map dataset changes immediately, without **Apply filters**.
-9. Confirm Fell-only clusters are orange, Found-only clusters are cyan, and mixed-mode clusters use the dominant fall-status color.
-10. Open the Data Explorer and confirm it still compares Fell and Found.
-11. Confirm Advanced analysis is visible without expanding a collapsible section.
-12. Confirm the temporal development chart uses decade aggregation and updates after shared filters are applied.
-13. Confirm the focus regions chart renders approximate regions and updates after shared filters are applied.
-14. Confirm the mass, time and frequency bubble chart renders in Advanced analysis and updates after shared filters are applied.
-15. Confirm chart tooltips stay inside chart cards.
-16. Click **Reset filters**, then **Apply filters**, and confirm the full dataset range returns.
-17. Use a filter combination that returns no records and confirm empty states render without errors.
-18. Check the browser console for errors.
