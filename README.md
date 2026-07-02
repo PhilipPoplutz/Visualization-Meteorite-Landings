@@ -70,11 +70,6 @@ app/static/app.js                        Filter state, API calls, Plotly renderi
 scripts/01_data_cleaning.py              Raw-to-cleaned data preparation
 data/raw/Meteorite_Landings.csv          Original NASA dataset
 data/processed/meteorites_cleaned.json   Cleaned dataset used by the app
-docs/documentation.md                    Main project documentation draft
-docs/screenshots/                        Documentation screenshots
-docs/course/2026_Assessment-Form_InfoVis.pdf
-docs/course/YYYY-MM_DD_Name_Paper_Template.docx
-AGENTS.md                                Project rules for future coding agents
 ```
 
 ## Regenerate the Cleaned Dataset
@@ -90,16 +85,6 @@ The script writes:
 ```text
 data/processed/meteorites_cleaned.json
 ```
-
-## Documentation Screenshots
-
-Project screenshots for the written documentation are stored in:
-
-```text
-docs/screenshots/
-```
-
-If the UI changes, regenerate the affected screenshots and update `docs/documentation.md` so all figure references point to existing files.
 
 ## Known Limitations
 
@@ -129,8 +114,3 @@ If the UI changes, regenerate the affected screenshots and update `docs/document
 16. Click **Reset filters**, then **Apply filters**, and confirm the full dataset range returns.
 17. Use a filter combination that returns no records and confirm empty states render without errors.
 18. Check the browser console for errors.
-19. Confirm all images referenced by `docs/documentation.md` exist in `docs/screenshots/`.
-
-## Documentation
-
-The full written project documentation is in `docs/documentation.md`. It follows the course-oriented structure and is written so it can later be transferred into the official DOCX template in `docs/course/`.
