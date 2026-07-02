@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meteorite Explorer Dashboard</title>
-    <link rel="stylesheet" href="/style.css?v=density-violin" />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/style.css?v=dominant-map-clusters" />
   </head>
   <body>
     <div class="app-shell">
@@ -15,80 +16,261 @@
         </nav>
 
         <div class="data-counter" aria-live="polite">
-          Total Data Points:
+          <span id="record-count-label">Map records:</span>
           <strong id="data-count">0</strong>
         </div>
       </header>
 
       <div class="dashboard">
-        <aside class="sidebar" aria-label="Map filters">
-          <h1>Filter Map By</h1>
+        <aside id="shared-sidebar" class="sidebar" aria-label="Shared filters">
+          <div class="sidebar-heading">
+            <h1>Filters</h1>
+            <p>Apply to Map and Data Explorer.</p>
+          </div>
 
           <section class="filter-group">
-            <h2>Fall Status</h2>
-            <label class="check-row fell">
-              <input id="show-fell" type="checkbox" checked />
-              <span class="custom-check"></span>
-              <span>Fell</span>
-            </label>
-            <label class="check-row found">
-              <input id="show-found" type="checkbox" checked />
-              <span class="custom-check"></span>
-              <span>Found</span>
-            </label>
-          </section>
-
-          <section class="filter-group">
-            <div class="filter-heading">
-              <h2>Timeline</h2>
-              <span><output id="year-min-value">860</output> - <output id="year-max-value">2013</output></span>
+            <h2>Year Range</h2>
+            <div class="preset-row" aria-label="Year presets">
+              <button class="preset-chip" type="button" data-preset-kind="year" data-min-year="860" data-max-year="2013">All</button>
+              <button class="preset-chip" type="button" data-preset-kind="year" data-min-year="1900" data-max-year="2013">1900-2013</button>
+              <button class="preset-chip" type="button" data-preset-kind="year" data-min-year="1950" data-max-year="2013">1950-2013</button>
+              <button class="preset-chip" type="button" data-preset-kind="year" data-min-year="1970" data-max-year="2013">1970-2013</button>
+              <button class="preset-chip" type="button" data-preset-kind="year" data-min-year="1990" data-max-year="2013">1990-2013</button>
             </div>
             <div class="dual-range" data-range="year">
-              <input id="min-year" type="range" min="860" max="2013" value="860" step="1" aria-label="Minimum year" />
-              <input id="max-year" type="range" min="860" max="2013" value="2013" step="1" aria-label="Maximum year" />
+              <input id="min-year" data-filter-field="minYear" type="range" min="860" max="2013" value="860" step="1" aria-label="Minimum year" />
+              <input id="max-year" data-filter-field="maxYear" type="range" min="860" max="2013" value="2013" step="1" aria-label="Maximum year" />
             </div>
-            <div class="range-labels">
-              <span>860</span>
-              <span>2013</span>
+            <div class="numeric-row">
+              <label>
+                <span>From year</span>
+                <input id="year-from-input" data-filter-field="minYear" type="number" min="860" max="2013" value="860" step="1" />
+              </label>
+              <label>
+                <span>To year</span>
+                <input id="year-to-input" data-filter-field="maxYear" type="number" min="860" max="2013" value="2013" step="1" />
+              </label>
             </div>
           </section>
 
           <section class="filter-group">
-            <div class="filter-heading">
-              <h2>Mass Range</h2>
-              <span><output id="mass-min-value">0 g</output> - <output id="mass-max-value">60,000,000 g</output></span>
+            <h2>Mass Range</h2>
+            <div class="preset-row" aria-label="Mass presets">
+              <button class="preset-chip" type="button" data-preset-kind="mass" data-min-mass="0" data-max-mass="60000000">All</button>
+              <button class="preset-chip" type="button" data-preset-kind="mass" data-min-mass="0" data-max-mass="99">Small &lt; 100 g</button>
+              <button class="preset-chip" type="button" data-preset-kind="mass" data-min-mass="100" data-max-mass="1000">Medium 100 g-1 kg</button>
+              <button class="preset-chip" type="button" data-preset-kind="mass" data-min-mass="1000" data-max-mass="10000">Large 1-10 kg</button>
+              <button class="preset-chip" type="button" data-preset-kind="mass" data-min-mass="10000" data-max-mass="60000000">Very large &gt; 10 kg</button>
             </div>
             <div class="dual-range" data-range="mass">
-              <input id="min-mass" type="range" min="0" max="60000000" value="0" step="1000" aria-label="Minimum mass" />
-              <input id="max-mass" type="range" min="0" max="60000000" value="60000000" step="1000" aria-label="Maximum mass" />
+              <input id="min-mass" data-log-filter-field="minMass" type="range" min="0" max="7778" value="0" step="1" aria-label="Minimum mass in grams" />
+              <input id="max-mass" data-log-filter-field="maxMass" type="range" min="0" max="7778" value="7778" step="1" aria-label="Maximum mass in grams" />
             </div>
-            <div class="range-labels">
-              <span>0 g</span>
-              <span>60,000,000 g</span>
+            <div class="numeric-row">
+              <label>
+                <span>From mass (g)</span>
+                <input id="mass-from-input" data-filter-field="minMass" type="number" min="0" max="60000000" value="0" step="1" />
+              </label>
+              <label>
+                <span>To mass (g)</span>
+                <input id="mass-to-input" data-filter-field="maxMass" type="number" min="0" max="60000000" value="60000000" step="1" />
+              </label>
             </div>
+          </section>
+
+          <section class="filter-actions" aria-label="Shared filter actions">
+            <button id="apply-filters" class="primary-action" type="button">Apply filters</button>
+            <button id="reset-filters" class="secondary-action" type="button">Reset filters</button>
+            <p id="filter-status" class="filter-status" aria-live="polite">Change filters, then click Apply filters.</p>
           </section>
         </aside>
 
         <main class="content-panel">
+          <div id="loading-indicator" class="loading-indicator" hidden>Loading filtered data...</div>
+
           <section id="view-map" class="view map-view active" aria-label="Meteorite landing map">
             <div id="map"></div>
+
+            <div class="map-fall-control" aria-label="Map fall status control">
+              <div class="map-fall-heading">
+                <strong>Fall Status</strong>
+              </div>
+              <div class="map-fall-options">
+                <label class="check-row fell">
+                  <input id="show-fell" type="checkbox" checked />
+                  <span class="custom-check"></span>
+                  <span>Fell</span>
+                </label>
+                <label class="check-row found">
+                  <input id="show-found" type="checkbox" checked />
+                  <span class="custom-check"></span>
+                  <span>Found</span>
+                </label>
+              </div>
+              <p id="map-fall-status" class="map-fall-status" aria-live="polite">Map uses both fall statuses.</p>
+            </div>
           </section>
 
           <section id="view-explorer" class="view explorer-view" aria-label="Meteorite data explorer" hidden>
-            <div class="explorer-grid">
-              <div class="chart-panel">
-                <div id="chart-density"></div>
-              </div>
-              <div class="chart-panel">
-                <div id="chart-violin"></div>
-              </div>
+            <div class="kpi-grid" aria-label="Filtered data summary">
+              <article class="kpi-card">
+                <span>Total records</span>
+                <strong id="kpi-total">0</strong>
+                <small>Current explorer dataset</small>
+              </article>
+              <article class="kpi-card fell">
+                <span>Fell</span>
+                <strong id="kpi-fell">0</strong>
+                <small>Observed falls</small>
+              </article>
+              <article class="kpi-card found">
+                <span>Found</span>
+                <strong id="kpi-found">0</strong>
+                <small>Later finds</small>
+              </article>
+              <article class="kpi-card">
+                <span>Median mass</span>
+                <strong id="kpi-median-mass">n/a</strong>
+              </article>
+              <article class="kpi-card">
+                <span>Maximum mass</span>
+                <strong id="kpi-max-mass">n/a</strong>
+              </article>
+              <article class="kpi-card">
+                <span>Year range</span>
+                <strong id="kpi-year-range">n/a</strong>
+              </article>
             </div>
+
+            <div class="explorer-grid overview-grid">
+              <article class="chart-panel wide" data-screenshot-id="mass-distribution">
+                <div class="chart-copy">
+                  <div class="chart-title-row">
+                    <h3>Mass distribution</h3>
+                    <button class="info-button" type="button" aria-label="More information about mass distribution">
+                      i
+                      <span class="tooltip" role="tooltip">
+                        Shows the distribution of meteorite masses. Supports the hypothesis that meteorite mass is strongly right-skewed.
+                      </span>
+                    </button>
+                  </div>
+                  <p>Log-scaled mass histogram.</p>
+                </div>
+                <div id="chart-mass-histogram" class="chart-plot"></div>
+              </article>
+
+              <article class="chart-panel wide" data-screenshot-id="temporal-development">
+                <div class="chart-copy">
+                  <div class="chart-title-row">
+                    <h3>Temporal development</h3>
+                    <button class="info-button" type="button" aria-label="More information about temporal development">
+                      i
+                      <span class="tooltip" role="tooltip">
+                        Shows meteorite records aggregated by decade. Supports the hypothesis that recorded meteorite finds increase over time. Records before 1800 are grouped into one early bin to keep the modern period readable.
+                      </span>
+                    </button>
+                  </div>
+                  <p>Records per decade.</p>
+                </div>
+                <div id="chart-timeline" class="chart-plot"></div>
+              </article>
+
+              <article class="chart-panel wide" data-screenshot-id="top-classes">
+                <div class="chart-copy">
+                  <div class="chart-title-row">
+                    <h3>Top meteorite classes</h3>
+                    <button class="info-button" type="button" aria-label="More information about meteorite classes">
+                      i
+                      <span class="tooltip" role="tooltip">
+                        Shows the most frequent meteorite classes in the selected dataset. The prototype shows class frequencies only and does not scientifically interpret each class in detail.
+                      </span>
+                    </button>
+                  </div>
+                  <p>Most frequent scientific classes.</p>
+                  <details class="chart-details class-glossary">
+                    <summary>Class code glossary</summary>
+                    <dl>
+                      <div>
+                        <dt>L, H, LL</dt>
+                        <dd>Ordinary chondrite groups. H has high iron, L has lower iron, and LL has low total iron and low metal.</dd>
+                      </div>
+                      <div>
+                        <dt>Number 3-6</dt>
+                        <dd>Petrologic type: lower numbers are less altered, higher numbers are more thermally metamorphosed.</dd>
+                      </div>
+                      <div>
+                        <dt>Examples</dt>
+                        <dd>L6 and H5 are common ordinary chondrite classes, not ranking scores.</dd>
+                      </div>
+                    </dl>
+                  </details>
+                </div>
+                <div id="chart-classes" class="chart-plot"></div>
+              </article>
+
+              <article class="chart-panel wide" data-screenshot-id="focus-regions">
+                <div class="chart-copy">
+                  <div class="chart-title-row">
+                    <h3>Focus regions by fall status</h3>
+                    <button class="info-button" type="button" aria-label="More information about approximate focus regions">
+                      i
+                      <span class="tooltip" role="tooltip">
+                        Uses approximate latitude/longitude regions to explore whether Found meteorites are concentrated in deserts and Antarctica. These regions are not exact biome classifications.
+                      </span>
+                    </button>
+                  </div>
+                  <p>Approximate regions compared by Fell and Found records.</p>
+                </div>
+                <div id="chart-focus-regions" class="chart-plot"></div>
+              </article>
+            </div>
+
+            <section class="advanced-section" aria-label="Advanced analysis">
+              <div class="advanced-heading">
+                <span>Advanced analysis</span>
+                <small>Multidimensional mass-time-frequency and fall-status comparison</small>
+              </div>
+
+              <div class="explorer-grid advanced-grid">
+                <article class="chart-panel" data-screenshot-id="mass-time-frequency">
+                  <div class="chart-copy">
+                    <div class="chart-title-row">
+                      <h3>Mass, time and frequency</h3>
+                      <button class="info-button" type="button" aria-label="More information about mass, time and frequency">
+                        i
+                        <span class="tooltip" role="tooltip">
+                          Combines decade, median mass and record count in one chart. This supports multidimensional exploration of temporal and mass-related patterns.
+                        </span>
+                      </button>
+                    </div>
+                    <p>Median mass per decade with record count.</p>
+                  </div>
+                  <div id="chart-mass-time-frequency" class="chart-plot"></div>
+                </article>
+
+                <article class="chart-panel" data-screenshot-id="fell-found-comparison">
+                  <div class="chart-copy">
+                    <div class="chart-title-row">
+                      <h3>Fell vs. Found mass</h3>
+                      <button class="info-button" type="button" aria-label="More information about Fell versus Found mass">
+                        i
+                        <span class="tooltip" role="tooltip">
+                          Compares observed falls with later finds and helps analyze differences in mass distributions.
+                        </span>
+                      </button>
+                    </div>
+                    <p>Distribution of meteorite mass by fall status.</p>
+                  </div>
+                  <div id="chart-fall-status" class="chart-plot"></div>
+                </article>
+              </div>
+            </section>
           </section>
         </main>
       </div>
     </div>
 
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <script src="/app.js?v=density-violin"></script>
+    <script src="/app.js?v=cluster-majority-stable"></script>
   </body>
 </html>
